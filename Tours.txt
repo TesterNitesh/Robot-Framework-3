@@ -1,0 +1,57 @@
+#Tours
+*** Settings ***
+Library     SeleniumLibrary
+
+*** Test Cases ***
+TC_03
+    #go to phptravelers website
+    Open browser    https://phptravels.net/     chrome
+    sleep   3
+    ${popup}=   run keyword and return status    element should be visible    //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']     timeout=2
+    Run keyword if  ${popup}    click element   //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+    #click on Tours
+    click element   //*[@aria-controls='profile-tab-pane' and @data-bs-target='#tab-tours']
+    #scroll down to popular tours
+    Scroll Element Into View    //*[@class='featured_tours p-0 rounded-0 py-3']
+    #Verify that popular tours are visible
+    Wait Until Element Is Visible   //*[@class='featured_tours p-0 rounded-0 py-3']
+    #count the no of tours present on page
+    ${Tours}=    Get Element Count   //*[@class='position-absolute top-0 start-0 h-100 w-100 text-white fw-bold overlay w-100']
+    log to console  ${Tours}
+    #clcik on view more
+    click element   (//*[@href='https://phptravels.net/tours'])[2]
+    #select location for tour
+    click element   //*[@aria-labelledby='select2-tours_city-container' and @role='combobox']
+    click element   (//*[@class='d-flex align-items-center p-2 to--insert overflow-hidden'])[1]
+    #select date of tour
+    click element   //*[@name='date' and @id='date']
+    Scroll Element Into View    (//td[text()='25'])[2]
+    click element   (//td[text()='25'])[2]
+    #select no of travelers
+    click element    //*[@class='dropdown-toggle dropdown-btn travellers waves-effect' and @role='button']
+    input text  //*[@id='tours_adults' and @name='adults']  1
+    #clcik on search button
+    click element    //*[@class='search_button w-100 btn btn-primary btn-m rounded-sm font-700 text-uppercase btn-full h-100 waves-effect' and @type='submit']
+    #select rating of tours
+    Select Radio Button     starRating      4
+    #select price range
+    Scroll Element Into View    //*[@class='card-body px-4 py-3']
+    Drag And Drop By Offset  //*[@class='irs-handle from']  0   0
+    Drag And Drop By Offset  //*[@class='irs-handle to']    800    0
+    #sort price
+    Scroll Element Into View    //*[@name='sortOrder' and @id='desc']
+    click element   //*[@name='sortOrder' and @id='desc']
+    #clcik on apply fliters
+    Scroll Element Into View    //*[@data-bs-dismiss='offcanvas' and text()='Apply Filters']
+    click element   //*[@data-bs-dismiss='offcanvas' and text()='Apply Filters']
+    #Go back to Home Screen
+    Scroll Element Into View    //*[@href='https://phptravels.net/']//*[@class='logo p-1 rounded']
+    click element   //*[@href='https://phptravels.net/']//*[@class='logo p-1 rounded']
+    #verify that you are on home screen
+    Title Should Be     PHPTRAVELS
+
+
+
+
+
+

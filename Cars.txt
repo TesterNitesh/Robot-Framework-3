@@ -1,0 +1,88 @@
+#Cars
+*** Settings ***
+Library     SeleniumLibrary
+
+*** Test Cases ***
+TC_04
+    #go to phptravelers website
+    Open browser    https://phptravels.net/     chrome
+    sleep   3
+    ${popup}=   run keyword and return status    element should be visible    //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']     timeout=2
+    Run keyword if  ${popup}    click element   //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+    #click on cars
+    click element  //*[@aria-controls='profile-tab-pane' and @data-bs-target='#tab-cars']
+    #scroll down to Recommended Transfer Cars
+    Scroll Element Into View    //*[@class='hotel-area section-bg section-padding pb-0']
+    #verify that we are able to see cars
+    Wait Until Element Is Visible   //*[@class='hotel-area section-bg section-padding pb-0']
+    #count the no of cars present on page
+    ${cars}=     Get Element Count   //*[@class='w-100 p-3 border mb-2 rounded-4']
+    log to console  ${cars}
+    #click on view more
+    Scroll Element Into View    (//*[@href='https://phptravels.net/cars'])[2]
+    click element   (//*[@href='https://phptravels.net/cars'])[2]
+    #select city from airport
+    click element   (//*[@aria-labelledby='select2--container' and @class='select2-selection select2-selection--single'])[1]
+    click element   //*[@class='btn btn-outline-primary btn-sm mx-0' and text()='DEL']
+    #select destination location
+    click element   (//*[@aria-labelledby='select2--container' and @class='select2-selection select2-selection--single'])[2]
+    input text  //*[@class='select2-search__field' and @aria-controls='select2--results']      New Delhi
+    click element   //*[@class='select2-results']
+    #select pickup date
+    click element   //*[@id='cars_from_date'][@class='dp form-control']
+    Scroll Element Into View    (//td[text()='23'])[1]
+    click element   (//td[text()='23'])[1]
+    #select pickup time
+    click element   //*[@class='form-select h-100' and @id='cars_from_time']
+    Scroll Element Into View    id=cars_from_time
+    Select From List By Value   id=cars_from_time   01:30
+    #select drop off date
+    click element   //*[@id='cars_to_date'][@class='dp form-control']
+    click element   (//td[text()='27'])[4]
+    #select drop off time
+    click element   //*[@class='form-select h-100' and @id='cars_to_time']
+    Select From List By Value   id=cars_to_time     23:00
+    #select no of travellers
+    click element    //*[@class='dropdown dropdown-contain']
+    input text  //*[@class='qtyInput_cars' and @id='cars_adults']   1
+    #select car and click on book now button
+    Scroll Element Into View   (//*[@class='btn btn-light fadeout waves-effect'])[3]
+    click element    (//*[@class='btn btn-light fadeout waves-effect'])[3]
+    #fill personal information
+    sleep   3
+    input text  //*[@id='p-first-name' and @name="user[first_name]"]    ABC
+    input text  //*[@id='p-last-name' and @name="user[last_name]"]  XYZ
+    INPUT TEXT  //*[@id='p-email' and @name="user[email]"]  abcxyz@gamil.com
+    input text  //*[@id='p-phone' and @name="user[phone]"]  9876543210
+    input text  //*[@id='p-address' and @name="user[address]"]  room no 1,abc coclony,xyz street,nowhere-121212.
+    #select current country
+    Scroll Element Into View    //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-2']
+    click element   //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-2']
+    input text  //*[@class="form-control" and @aria-activedescendant='bs-select-2-226']  India
+    click element   //*[@id='bs-select-2-99']
+    #fill travelers information
+    Scroll Element Into View    (//*[@class='card-body'])[1]
+    input text  //*[@name='firstname_1' and @placeholder='First Name']  ABC
+    input text  //*[@name='lastname_1' and @placeholder='Last Name']    XYZ
+    input text  //*[@name='firstname_2' and @placeholder='First Name']  DEF
+    input text  //*[@name='lastname_2' and @placeholder='Last Name']    UVW
+    #select payment method 'Paypal'
+    Scroll Element Into View    (//*[@class='form-content'])[1]
+    click element   //*[@id='gateway_paypal' and @name='payment_gateway']
+    #Confirm Booking
+    Scroll Element Into View    (//*[@class='d-flex gap-3 alert border'])[1]
+    click element   //*[@id='agreechb' and @type='checkbox']
+    Scroll Element Into View    //*[@id='booking' and @type='submit']
+    click element   //*[@id='booking' and @type='submit']
+    #Make sure that Hotel Booked Successfully
+    ${Booking}=     wait until element is visible   (//table[@class='table table-bordered'])[1]
+    log to console  ${Booking}
+    Capture Element Screenshot  (//table[@class='table table-bordered'])[1]  confirmtable.png
+    #scroll down and see confirm booked Hotel details
+    Scroll Element Into View    (//*[@class='table table-bordered'])[2]
+    Capture Element Screenshot  (//*[@class='table table-bordered'])[2]   flightdetail.png
+     #Go back to Home Screen
+    Scroll Element Into View    //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    click element   //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    #verify that you are on home screen
+    Title Should Be     PHPTRAVELS

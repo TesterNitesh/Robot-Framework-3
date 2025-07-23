@@ -1,0 +1,89 @@
+#Hotels
+*** Settings ***
+Library     SeleniumLibrary
+
+*** Test Cases ***
+TC_02
+    #go to phptravelers website
+    Open browser    https://phptravels.net/     chrome
+    sleep   3
+    ${popup}=   run keyword and return status    element should be visible    //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']     timeout=2
+    Run keyword if  ${popup}    click element   //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+    #click on hotels
+    click element   //*[@data-bs-target='#tab-hotels' and @aria-controls='home-tab-pane']
+    #scrolled down to featured hotels
+    Scroll Element Into View    //*[@class='section-heading text-start']//*[text()='Featured Hotels']
+    #verify that we are able to see hotels
+    Wait Until Element Is Visible   //*[@class='section-heading text-start']//*[text()='Featured Hotels']
+    #click on view more
+    Scroll Element Into View    (//*[@class='btn btn-block btn-outline-light w-100'])[1]
+    click element   (//*[@class='btn btn-block btn-outline-light w-100'])[1]
+    #select city
+    click element  //*[@class='select2-selection select2-selection--single']
+    click element   //*[@class='d-flex align-items-center p-2 to--insert overflow-hidden']//*[text()='United Arab Emirates']
+    #select checkin date
+    click element   //*[@class='checkin form-control']
+    Scroll Element Into View    (//td[text()='23'])[1]
+    click element   (//td[text()='23'])[1]
+    #select checkout date
+    click element    (//td[text()='26'])[4]
+    #select no of members
+    click element   //*[@class='dropdown-toggle dropdown-btn travellers d-flex align-items-center waves-effect' and @aria-expanded='false']
+    click element   (//*[@class='roomInc'])[1]
+    click element   (//*[@class='qtyInc'])[2]
+    #click on search for hotel button
+    click element     //*[@class='search_button w-100 btn btn-primary btn-m rounded-sm font-700 text-uppercase btn-full h-100 waves-effect']
+    #click on book button of first hotel that appears
+    sleep   5
+    click element   (//*[@class='btn btn-primary px-4 rounded-4 w-100 fw-light d-flex justify-content-between align-items-center waves-effect ng-scope'])[1]
+    sleep   3
+    Scroll Element Into View    (//*[@class='btn btn-primary rounded-1 waves-effect'])[1]
+    click element   (//*[@class='btn btn-primary rounded-1 waves-effect'])[1]
+    #fill personal information
+    sleep   3
+    input text  //*[@id='p-first-name' and @name="user[first_name]"]    ABC
+    input text  //*[@id='p-last-name' and @name="user[last_name]"]  XYZ
+    INPUT TEXT  //*[@id='p-email' and @name="user[email]"]  abcxyz@gamil.com
+    input text  //*[@id='p-phone' and @name="user[phone]"]  9876543210
+    input text  //*[@id='p-address' and @name="user[address]"]  room no 1,abc coclony,xyz street,nowhere-121212.
+    #select current country
+    Scroll Element Into View    //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-2']
+    click element   //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-2']
+    input text  //*[@class="form-control" and @aria-activedescendant='bs-select-2-226']  India
+    click element   //*[@id='bs-select-2-99']
+    #fill travelers information
+    Scroll Element Into View    (//*[@class='card-body'])[1]
+    input text  //*[@name='firstname_1' and @placeholder='First Name']  ABC
+    input text  //*[@name='lastname_1' and @placeholder='Last Name']    XYZ
+    input text  //*[@name='firstname_2' and @placeholder='First Name']  DEF
+    input text  //*[@name='lastname_2' and @placeholder='Last Name']    UVW
+    #select payment method 'Paypal'
+    Scroll Element Into View    (//*[@class='form-content'])[1]
+    click element   //*[@id='gateway_paypal' and @name='payment_gateway']
+    #Confirm Booking
+    Scroll Element Into View    (//*[@class='d-flex gap-3 alert border'])[1]
+    click element   //*[@id='agreechb' and @type='checkbox']
+    Scroll Element Into View    //*[@id='booking' and @type='submit']
+    click element   //*[@id='booking' and @type='submit']
+    #Make sure that Hotel Booked Successfully
+    ${Booking}=     wait until element is visible   //table[@class='table table-bordered']//th[text()='Booking Reference']
+    log to console  ${Booking}
+    Capture Element Screenshot  //table[@class='table table-bordered']  confirmtable.png
+    #scroll down and see confirm booked Hotel details
+    Scroll Element Into View    //*[@class='card']
+    Capture Element Screenshot  //*[@class='card']   flightdetail.png
+     #Go back to Home Screen
+    Scroll Element Into View    //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    click element   //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    #verify that you are on home screen
+    Title Should Be     PHPTRAVELS
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+*** Settings ***
+Library      RequestsLibrary
+Library     Collections
+
+*** Variables ***
+${base_url}     https://restful-booker.herokuapp.com
+
+*** Test Cases ***
+TC_02
+    create session  bookingid    ${base_url}
+    ${responce}=    get request  bookingid   /booking
+
+    log to console  ${responce.status_code}
+    log to console  ${responce.content}
+    log to console  ${responce.headers}
+
+    ${status_code}=     convert to string   ${responce.status_code}
+    should be equal  ${status_code}        200
+
+     ${body}=   convert to string    ${responce.content}
+     should contain     ${body}      bookingid
+
+     ${contentTypeValue}=   get from dictionary    ${responce.headers}    Content-Type
+     should be equal     ${contentTypeValue}     application/json; charset=utf-8
+
+
+
+
+
+

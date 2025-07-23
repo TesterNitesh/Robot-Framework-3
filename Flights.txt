@@ -1,0 +1,99 @@
+#Flights
+*** Settings ***
+Library   SeleniumLibrary
+
+*** Test Cases ***
+TC_01
+    Open browser    https://phptravels.net/     chrome
+    sleep   3
+    ${popup}=   run keyword and return status    element should be visible    //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']     timeout=2
+    Run keyword if  ${popup}    click element   //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+#    ${status}=    Run Keyword And Return Status    Element Should Be Visible    xpath=//*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+#    If  True
+#        click element   //*[@id='cookie_stop' and @class='cc-btn cc-dismiss rounded-2 btn btn-danger waves-effect']
+#    end
+    #click on Flights
+    click element   xpath://button[@aria-controls='profile-tab-pane' and @class='nav-link w-100 rounded-5 active waves-effect']
+    #Scroll down to Featured Flights
+    Scroll Element Into View    xpath://section[@class='round-trip-flight mb-4']
+    #verify that we on Featured Flights
+    Wait Until Element Is Visible   xpath://section[@class='round-trip-flight mb-4']
+    Capture Element Screenshot  xpath://section[@class='round-trip-flight mb-4']    featuredflight.png
+    #select Kuala Lumpur to Dubai Flight
+    Scroll Element Into View  //*[@class=' hover-primary rounded-4 d-flex p-3 px-4 fadeout waves-effect']//*[text()='Kuala Lumpur']
+    Click element   //*[@class=' hover-primary rounded-4 d-flex p-3 px-4 fadeout waves-effect']//*[text()='Kuala Lumpur']
+    #verify that we selected correct flight
+    sleep   10
+    Wait Until Page Contains Element   //*[@class='text-uppercase mx-3']    timeout=5
+    #select stops to Direct
+    click element    //*[@for='oneway_flights_0']
+    #select departure evening
+    Scroll Element Into View    //*[@class='card-body p-3']
+    click element   //*[@class='nav-link active w-100 waves-effect' and @id='departure-tab']
+    click element    //*[@id='departure-evening' and @name='flighttime']
+    #select arrival early morning
+    click element    //*[@class='nav-link w-100 waves-effect' and @id="arrival-tab"]
+    click element    //*[@name='arrivalflighttime' and @id="arrival-early-morning"]
+    #select price range Highest to Lower
+    Scroll Element Into View    //*[@class='flex-nowrap gap-3 flex-sm-wrap nav nav-pills nav-justified bg-white overflow-hidden mb-0']
+    click element   //*[@class='d-block w-100 d-flex align-items-center justify-content-center border gap-2 py-1 rounded-4 mb-0 waves-effect']
+    #select the most costly flight available
+    click element   (//div[@class='d-flex justify-content-start align-items-center gap-2'])[1]
+    #fill personal information
+    input text  //*[@id='p-first-name' and @name="user[first_name]"]    ABC
+    input text  //*[@id='p-last-name' and @name="user[last_name]"]  XYZ
+    INPUT TEXT  //*[@id='p-email' and @name="user[email]"]  abcxyz@gamil.com
+    input text  //*[@id='p-phone' and @name="user[phone]"]  9876543210
+    input text  //*[@id='p-address' and @name="user[address]"]  room no 1,abc coclony,xyz street,nowhere-121212.
+    #select nationality
+    Scroll Element Into View    (//*[@class='form-floating mb-3'])[1]
+    click element   //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-1']
+    input text  //*[@class="form-control" and @role='combobox']  India
+    click element   //*[@id='bs-select-1-99']
+    #Select From List By Label   id=bs-select-1-99    India
+    #select current country
+    click element   //*[@class='btn dropdown-toggle btn-light' and @aria-owns='bs-select-2']
+    input text  //*[@class="form-control" and @aria-activedescendant='bs-select-2-226']  India
+    click element   //*[@id='bs-select-2-99']
+    #Select From List By Label   id=//*[@id='bs-select-2-99']       India
+    #fill travelers information
+    Scroll Element Into View    (//*[@class='card-body'])[1]
+    input text  //*[@id='t-first-name-1' and @placeholder='First Name']     ABC
+    input text  //*[@id='t-last-name-1' and @placeholder='Last Name']    XYZ
+    Select From List By Value   id=t-nationality-1         IN
+    Select From List By Value   name=dob_month_1       06
+    Select From List By Value   name=dob_day_1   22
+    Select From List By Value   name=dob_year_1      2002
+    input text  //*[@name='passport_1' and @placeholder='Passport or ID Number']    112233344445555
+    input text  //*[@id='t-email-1' and @placeholder='Email Address']    abcxyz@gamil.com
+    input text  //*[@id='t-phone-1' and @placeholder='Phone']    9876543210
+    #select payment method 'Paypal'
+    Scroll Element Into View    (//*[@class='form-content'])[1]
+    click element   //*[@id='gateway_paypal' and @name='payment_gateway']
+    #Confirm Booking
+    Scroll Element Into View    (//*[@class='d-flex gap-3 alert border'])[1]
+    click element   //*[@id='agreechb' and @type='checkbox']
+    Scroll Element Into View    //*[@id='booking' and @type='submit']
+    click element   //*[@id='booking' and @type='submit']
+    #Make sure that Flight Booked Successfully
+    ${Booking}=     wait until element is visible   //table[@class='table table-bordered']//th[text()='Booking Reference']
+    log to console  ${Booking}
+    Capture Element Screenshot  //table[@class='table table-bordered']  confirmtable.png
+    #scroll down and see confirm booked flight details
+    Scroll Element Into View    //div[@class='p-3 bg-light rounded-3 border']
+    Capture Element Screenshot  //div[@class='p-3 bg-light rounded-3 border']   flightdetail.png
+    #Go back to Home Screen
+    Scroll Element Into View    //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    click element   //*[@class='btn btn-primary mb-3 w-100 no_print waves-effect' and @href='https://phptravels.net/']
+    #verify that you are on home screen
+    Title Should Be     PHPTRAVELS
+
+
+
+
+
+
+
+
+
+
